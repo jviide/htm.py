@@ -8,6 +8,7 @@ from token import tok_name
 
 REX = re.compile(r"(?:\\{|[^{])*")
 
+
 def split(string):
     strings = []
     exprs = []
@@ -17,7 +18,7 @@ def split(string):
         strings.append(match.group(0))
         if match.end() == len(string):
             break
-        string = string[match.end() + 1:]
+        string = string[match.end() + 1 :]
 
         expr, string = parse_expr(string)
         exprs.append(compile(expr, "", "eval"))
@@ -40,8 +41,11 @@ def parse_expr(string):
                     row, offset = t[3]
                     sio.seek(0)
                     for _ in range(row - 1):
-                      offset += len(sio.readline())
-                    return untokenize(tokens).decode("utf-8"), b[offset:].decode("utf-8")
+                        offset += len(sio.readline())
+                    return (
+                        untokenize(tokens).decode("utf-8"),
+                        b[offset:].decode("utf-8"),
+                    )
                 count -= 1
         tokens.append(t)
 
@@ -53,6 +57,7 @@ RE_VALUE = re.compile(r"\"[^\"]\"|'[^']'|[^\"'>/\s]+")
 RE_ATTR = re.compile(r"\"[^\"]\"|'[^']'|[^\"'>/=\s]+")
 
 RE_WS = re.compile(r"\s*")
+
 
 def skip_ws(string, start):
     match = RE_WS.match(string, start)
@@ -72,9 +77,9 @@ def htm_parse(strings):
                 if found == -1:
                     text = string[start:].strip()
                     if text:
-                      ops.append(("CHILD", False, text))
+                        ops.append(("CHILD", False, text))
                     if index < len(strings) - 1:
-                      ops.append(("CHILD", True, index))
+                        ops.append(("CHILD", True, index))
                     break
 
                 if found == start:
@@ -82,7 +87,7 @@ def htm_parse(strings):
                 else:
                     text = string[start:found].strip()
                     if text:
-                      ops.append(("CHILD", False, text))
+                        ops.append(("CHILD", False, text))
                     start = found + 1
                 text = False
 
@@ -116,7 +121,7 @@ def htm_parse(strings):
                     ops.append(("CLOSE",))
                 start = start + 1
                 slash = True
-            elif string[start:start + 3] == "..." and start + 3 == len(string):
+            elif string[start : start + 3] == "..." and start + 3 == len(string):
                 if not slash:
                     ops.append(("SPREAD", True, index))
                 start = start + 3
@@ -127,15 +132,15 @@ def htm_parse(strings):
                 attr = match.group(0)
                 start = match.end()
 
-                next_ch = string[start:start + 1]
+                next_ch = string[start : start + 1]
                 if next_ch.isspace() or next_ch in ("/", ">"):
                     if not slash:
                         ops.append(("ATTR", attr, False, True))
                 elif next_ch == "=":
                     start += 1
                     start = skip_ws(string, start)
-                    if start >= len(string):     
-                        if not slash:                
+                    if start >= len(string):
+                        if not slash:
                             ops.append(("ATTR", attr, True, index))
                     else:
                         match = RE_VALUE.match(string, start)
@@ -143,7 +148,7 @@ def htm_parse(strings):
                             raise Exception()
                         if not slash:
                             ops.append(("ATTR", attr, False, match.group(0)))
-                        start = match.end()                                        
+                        start = match.end()
                 else:
                     raise Exception(attr)
 
@@ -152,7 +157,7 @@ def htm_parse(strings):
         if op[0] == "OPEN":
             count += 1
         elif op[0] == "CLOSE":
-            count -= 1        
+            count -= 1
         if count < 0:
             raise Exception("too many closes")
     if count > 0:
@@ -161,9 +166,9 @@ def htm_parse(strings):
     return ops
 
 
-def htm_eval(h, ops, values, index = 0):
+def htm_eval(h, ops, values, index=0):
     root = []
-    stack = [('', {}, root)]
+    stack = [("", {}, root)]
 
     for op in ops:
         if op[0] == "OPEN":
@@ -194,25 +199,26 @@ def htm_eval(h, ops, values, index = 0):
 
 def htm(cache_size=128):
     def _htm(h):
-      @functools.lru_cache(maxsize=cache_size)
-      def parse(string):
-          strings, exprs = split(string)
-          ops = htm_parse(strings)
-          return ops, exprs
+        @functools.lru_cache(maxsize=cache_size)
+        def parse(string):
+            strings, exprs = split(string)
+            ops = htm_parse(strings)
+            return ops, exprs
 
-      def html(string):
-          ops, exprs = parse(string.strip())
+        def html(string):
+            ops, exprs = parse(string.strip())
 
-          stack = inspect.stack()
-          f_globals = stack[1].frame.f_globals
-          f_locals = stack[1].frame.f_locals
-          del stack
+            stack = inspect.stack()
+            f_globals = stack[1].frame.f_globals
+            f_locals = stack[1].frame.f_locals
+            del stack
 
-          values = []
-          for expr in exprs:
-              values.append(eval(expr, f_globals, f_locals))
+            values = []
+            for expr in exprs:
+                values.append(eval(expr, f_globals, f_locals))
 
-          return htm_eval(h, ops, values)          
-      return html
+            return htm_eval(h, ops, values)
+
+        return html
 
     return _htm
