@@ -3,49 +3,57 @@ import re
 import parser
 import inspect
 import functools
+from bisect import bisect
 from tokenize import tokenize, untokenize
 from token import tok_name
 
-REX = re.compile(r"(?:\\{|[^{])*")
+REX = re.compile(rb"(?:\\{|[^{])*")
 
 
 def split(string):
+    data = string.encode("utf-8")
+    bio = io.BytesIO(data)
+
+    row_offsets = [0]
+    for line in data.split(b"\n"):
+        row_offsets.append(row_offsets[-1] + len(line) + 1)
+
     strings = []
     exprs = []
-
+    start = 0
     while True:
-        match = REX.match(string)
-        strings.append(match.group(0))
-        if match.end() == len(string):
+        match = REX.match(data, start)
+        strings.append(match.group(0).decode("utf-8"))
+        start = match.end()
+        if start == len(data):
             break
-        string = string[match.end() + 1 :]
 
-        expr, string = parse_expr(string)
+        start = start + 1
+        bio.seek(start)
+
+        expr, row, column = parse_expr(bio)
         exprs.append(compile(expr, "", "eval"))
+
+        start_row = bisect(row_offsets, start) - 1
+        if row > 0:
+            start = row_offsets[row + start_row] + column
+        else:
+            start = start + column
 
     return strings, exprs
 
 
-def parse_expr(string):
-    b = string.encode("utf-8")
-    sio = io.BytesIO(b)
-
+def parse_expr(bio):
     count = 0
     tokens = []
-    for t in tokenize(sio.readline):
+    for t in tokenize(bio.readline):
         if tok_name[t[0]] == "OP":
             if t[1] == "{":
                 count += 1
             elif t[1] == "}":
                 if count == 0:
-                    row, offset = t[3]
-                    sio.seek(0)
-                    for _ in range(row - 1):
-                        offset += len(sio.readline())
-                    return (
-                        untokenize(tokens).decode("utf-8"),
-                        b[offset:].decode("utf-8"),
-                    )
+                    row, column = t[3]
+                    return untokenize(tokens).decode("utf-8"), row - 1, column
                 count -= 1
         tokens.append(t)
 
@@ -76,13 +84,13 @@ def skip_ws(string, start):
 
 def htm_parse(strings):
     ops = []
-    text = True
+    in_tag = False
     slash = False
 
     for index, string in enumerate(strings):
         start = 0
         while start < len(string):
-            if text:
+            if not in_tag:
                 found = string.find("<", start)
                 if found == -1:
                     text = string[start:].strip()
@@ -90,14 +98,11 @@ def htm_parse(strings):
                         ops.append(("CHILD", False, text))
                     break
 
-                if found == start:
-                    start = start + 1
-                else:
-                    text = string[start:found].strip()
-                    if text:
-                        ops.append(("CHILD", False, text))
-                    start = found + 1
-                text = False
+                text = string[start:found].strip()
+                if text:
+                    ops.append(("CHILD", False, text))
+                start = found + 1
+                in_tag = True
 
                 start = skip_ws(string, start)
                 if start >= len(string):
@@ -119,7 +124,7 @@ def htm_parse(strings):
 
             if string[start] == ">":
                 start = start + 1
-                text = True
+                in_tag = False
                 slash = False
             elif string[start] == "/":
                 if not slash:
@@ -150,7 +155,7 @@ def htm_parse(strings):
                 else:
                     raise Exception(attr)
 
-        if text and index < len(strings) - 1:
+        if not in_tag and index < len(strings) - 1:
             ops.append(("CHILD", True, index))
 
     count = 0
