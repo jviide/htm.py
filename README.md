@@ -1,4 +1,4 @@
-# htm.py
+# htm.py ![PyPI](https://img.shields.io/pypi/v/htm.svg?color=blue)
 
 A Python version of [developit/htm](https://github.com/developit/htm) - JSX-like syntax in plain ~~JavaScript~~ Python.
 
