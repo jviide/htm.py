@@ -5,7 +5,7 @@ with open("README.md", "r") as readme:
 
 setuptools.setup(
     name="htm",
-    version="0.0.3",
+    version="0.0.4",
     author="Joachim Viide",
     author_email="jviide@iki.fi",
     description="HTM for Python",
