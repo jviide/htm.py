@@ -88,8 +88,6 @@ def htm_parse(strings):
                     text = string[start:].strip()
                     if text:
                         ops.append(("CHILD", False, text))
-                    if index < len(strings) - 1:
-                        ops.append(("CHILD", True, index))
                     break
 
                 if found == start:
@@ -152,6 +150,9 @@ def htm_parse(strings):
                 else:
                     raise Exception(attr)
 
+        if text and index < len(strings) - 1:
+            ops.append(("CHILD", True, index))
+
     count = 0
     for op in ops:
         if op[0] == "OPEN":
@@ -162,7 +163,6 @@ def htm_parse(strings):
             raise Exception("too many closes")
     if count > 0:
         raise Exception("too many opens")
-
     return ops
 
 
