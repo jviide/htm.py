@@ -7,7 +7,11 @@ from bisect import bisect
 from tokenize import tokenize, untokenize
 from token import tok_name
 
-REX = re.compile(rb"(?:\\{|[^{])*")
+RE_TEMPLATE = re.compile(rb"(?:\\{|[^{])*")
+
+
+class ParseError(ValueError):
+    pass
 
 
 def split(string):
@@ -22,7 +26,7 @@ def split(string):
     exprs = []
     start = 0
     while True:
-        match = REX.match(data, start)
+        match = RE_TEMPLATE.match(data, start)
         strings.append(match.group(0).decode("utf-8"))
         start = match.end()
         if start == len(data):
@@ -56,8 +60,7 @@ def parse_expr(bio):
                     return untokenize(tokens).decode("utf-8"), row - 1, column
                 count -= 1
         tokens.append(t)
-
-    raise Exception()
+    raise ParseError("unterminated expression")
 
 
 RE_VALUE = re.compile(r"\"[^\"]*\"|'[^']*'|[^\"'>/\s]+")
@@ -70,7 +73,7 @@ RE_WS = re.compile(r"\s*")
 def get_token(string, start, regex):
     match = RE_ATTR.match(string, start)
     if not match:
-        raise Exception()
+        raise ParseError("no token found")
     token = match.group(0)
     if token[0] in "\"'" and token[0] == token[-1]:
         token = token[1:-1]
@@ -107,7 +110,9 @@ def htm_parse(strings):
                 start = skip_ws(string, start)
                 if start >= len(string):
                     ops.append(("OPEN", True, index))
-                elif string[start] == "/":
+                    continue
+
+                if string[start] == "/":
                     slash = True
                     start = start + 1
                     ops.append(("CLOSE",))
@@ -115,12 +120,13 @@ def htm_parse(strings):
                     tag, start = get_token(string, start, RE_VALUE)
                     ops.append(("OPEN", False, tag))
                 else:
-                    raise Exception()
-                continue
+                    raise ParseError("empty tag")
 
             start = skip_ws(string, start)
             if start >= len(string):
-                raise Exception()
+                if index == len(strings) - 1:
+                    raise ParseError("unexpected end of data")
+                raise ParseError("expression not allowed")
 
             if string[start] == ">":
                 start = start + 1
@@ -146,14 +152,20 @@ def htm_parse(strings):
                     start += 1
                     start = skip_ws(string, start)
                     if start >= len(string):
+                        if index == len(strings) - 1:
+                            raise ParseError("unexpected end of data")
                         if not slash:
                             ops.append(("ATTR", attr, True, index))
                     else:
                         value, start = get_token(string, start, RE_VALUE)
                         if not slash:
                             ops.append(("ATTR", attr, False, value))
+                elif next_ch:
+                    raise ParseError("invalid character")
+                elif index == len(strings) - 1:
+                    raise ParseError("unexpected end of data")
                 else:
-                    raise Exception(attr)
+                    raise ParseError("expression not allowed here")
 
         if not in_tag and index < len(strings) - 1:
             ops.append(("CHILD", True, index))
@@ -165,9 +177,9 @@ def htm_parse(strings):
         elif op[0] == "CLOSE":
             count -= 1
         if count < 0:
-            raise Exception("too many closes")
+            raise ParseError("closing unopened tags")
     if count > 0:
-        raise Exception("too many opens")
+        raise ParseError("all opened tags not closed")
     return ops
 
 
@@ -195,7 +207,7 @@ def htm_eval(h, ops, values, index=0):
             tag, props, children = stack[-1]
             children.append(values[item] if value else item)
         else:
-            raise Exception()
+            raise BaseException("unknown op")
 
     if len(root) == 1:
         return root[0]

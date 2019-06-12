@@ -1,5 +1,5 @@
 import unittest
-from htm import htm
+from htm import htm, ParseError
 
 
 @htm()
@@ -61,6 +61,34 @@ class TestHTM(unittest.TestCase):
         self.assertEqual(
             html("<div ...{foo} ...{{'bar': 2}} />"), ("div", {"foo": 1, "bar": 2}, [])
         )
+
+    def test_tag_errors(self):
+        with self.assertRaisesRegex(ParseError, "empty tag"):
+            html("< >")
+        with self.assertRaisesRegex(ParseError, "empty tag"):
+            html("<>")
+        with self.assertRaisesRegex(ParseError, "no token found"):
+            html("<'")
+
+    def test_attribute_name_errors(self):
+        with self.assertRaisesRegex(ParseError, "expression not allowed"):
+            html("<div {1}>")
+        with self.assertRaisesRegex(ParseError, "unexpected end of data"):
+            html("<div ")
+        with self.assertRaisesRegex(ParseError, "no token found"):
+            html("<div '")
+
+    def test_attribute_value_errors(self):
+        with self.assertRaisesRegex(ParseError, "invalid character"):
+            html("<div 'a'x")
+        with self.assertRaisesRegex(ParseError, "expression not allowed"):
+            html("<div a{1}")
+        with self.assertRaisesRegex(ParseError, "unexpected end of data"):
+            html("<div a")
+        with self.assertRaisesRegex(ParseError, "unexpected end of data"):
+            html("<div a=")
+        with self.assertRaisesRegex(ParseError, "no token found"):
+            html("<div a=>")
 
 
 if __name__ == "__main__":
