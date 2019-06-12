@@ -8,6 +8,14 @@ def html(tag, props, children):
 
 
 class TestHTM(unittest.TestCase):
+    def test_escaping(self):
+        self.assertEqual(html("<div>\\{1}</div>"), ("div", {}, ["{1}"]))
+        self.assertEqual(html("<div>\\\\{1}</div>"), ("div", {}, ["\\", 1]))
+        self.assertEqual(html("<div>\\\\\\{1}</div>"), ("div", {}, ["\\{1}"]))
+        self.assertEqual(html("<div>\\\\\\e{1}</div>"), ("div", {}, ["\\\\e", 1]))
+        self.assertEqual(html("<div>\\\\</div>"), ("div", {}, ["\\"]))
+        self.assertEqual(html("<div>\\e</div>"), ("div", {}, ["\\e"]))
+
     def test_single_root(self):
         self.assertEqual(html("<div />"), ("div", {}, []))
 

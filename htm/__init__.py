@@ -7,7 +7,7 @@ from bisect import bisect
 from tokenize import tokenize, untokenize
 from token import tok_name
 
-RE_TEMPLATE = re.compile(rb"(?:\\{|[^{])*")
+RE_TEMPLATE = re.compile(rb"(?:\\[\\{]|[^{])*")
 
 
 class ParseError(ValueError):
@@ -27,7 +27,9 @@ def split(string):
     start = 0
     while True:
         match = RE_TEMPLATE.match(data, start)
-        strings.append(match.group(0).decode("utf-8"))
+        strings.append(
+            match.group(0).replace(b"\\\\", b"\\").replace(b"\\{", b"{").decode("utf-8")
+        )
         start = match.end()
         if start == len(data):
             break
