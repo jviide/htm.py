@@ -52,11 +52,21 @@ def parse_expr(string):
     raise Exception()
 
 
-RE_VALUE = re.compile(r"\"[^\"]\"|'[^']'|[^\"'>/\s]+")
+RE_VALUE = re.compile(r"\"[^\"]*\"|'[^']*'|[^\"'>/\s]+")
 
-RE_ATTR = re.compile(r"\"[^\"]\"|'[^']'|[^\"'>/=\s]+")
+RE_ATTR = re.compile(r"\"[^\"]*\"|'[^']*'|[^\"'>/=\s]+")
 
 RE_WS = re.compile(r"\s*")
+
+
+def get_token(string, start, regex):
+    match = RE_ATTR.match(string, start)
+    if not match:
+        raise Exception()
+    token = match.group(0)
+    if token[0] in "\"'" and token[0] == token[-1]:
+        token = token[1:-1]
+    return token, match.end()
 
 
 def skip_ws(string, start):
@@ -99,11 +109,8 @@ def htm_parse(strings):
                     start = start + 1
                     ops.append(("CLOSE",))
                 elif string[start] != ">":
-                    match = RE_VALUE.match(string, start)
-                    if not match:
-                        raise Exception()
-                    start = match.end()
-                    ops.append(("OPEN", False, match.group(0)))
+                    tag, start = get_token(string, start, RE_VALUE)
+                    ops.append(("OPEN", False, tag))
                 else:
                     raise Exception()
                 continue
@@ -126,11 +133,7 @@ def htm_parse(strings):
                     ops.append(("SPREAD", True, index))
                 start = start + 3
             else:
-                match = RE_ATTR.match(string, start)
-                if not match:
-                    raise Exception()
-                attr = match.group(0)
-                start = match.end()
+                attr, start = get_token(string, start, RE_ATTR)
 
                 next_ch = string[start : start + 1]
                 if next_ch.isspace() or next_ch in ("/", ">"):
@@ -143,12 +146,9 @@ def htm_parse(strings):
                         if not slash:
                             ops.append(("ATTR", attr, True, index))
                     else:
-                        match = RE_VALUE.match(string, start)
-                        if not match:
-                            raise Exception()
+                        value, start = get_token(string, start, RE_VALUE)
                         if not slash:
-                            ops.append(("ATTR", attr, False, match.group(0)))
-                        start = match.end()
+                            ops.append(("ATTR", attr, False, value))
                 else:
                     raise Exception(attr)
 
