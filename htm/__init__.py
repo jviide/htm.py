@@ -214,14 +214,15 @@ def htm_eval(h, ops, values, index=0):
     return root
 
 
-def htm(cache_size=128):
+def htm(*, cache_maxsize=128):
     def _htm(h):
-        @functools.lru_cache(maxsize=cache_size)
+        @functools.lru_cache(maxsize=cache_maxsize)
         def parse(string):
             strings, exprs = split(string)
             ops = htm_parse(strings)
             return ops, exprs
 
+        @functools.wraps(h)
         def html(string):
             ops, exprs = parse(string.strip())
 
