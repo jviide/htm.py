@@ -20,12 +20,12 @@ def html(tag, props, children):
     return tag, props, children
 
 a = 1
-b = 100
+b = {"bar": 100}
 c = "span"
 d = "world"
 
 html("""
-  <div foo={a+2} ...{{"bar": b}}>
+  <div foo={a+2} ...{b}>
     <{c}>Hello, {d}!<//>
   </div>
 """)
