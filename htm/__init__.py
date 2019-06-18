@@ -1,6 +1,5 @@
 import io
 import re
-import parser
 import inspect
 import functools
 from bisect import bisect
