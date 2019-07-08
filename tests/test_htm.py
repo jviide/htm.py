@@ -8,13 +8,6 @@ def html(tag, props, children):
 
 
 class TestHTM(unittest.TestCase):
-    def test_escaping(self):
-        self.assertEqual(html("<div>{{1}}</div>"), ("div", {}, ["{1}"]))
-        self.assertEqual(html("<div>{{{1}}}</div>"), ("div", {}, ["{", 1, "}"]))
-        self.assertEqual(html("<div>{({1})}</div>"), ("div", {}, [{1}]))
-        with self.assertRaisesRegex(ParseError, "unbalanced closing braces"):
-            html("<div>}</div>")
-
     def test_single_root(self):
         self.assertEqual(html("<div />"), ("div", {}, []))
 
