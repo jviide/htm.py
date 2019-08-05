@@ -14,9 +14,6 @@ class TestHTM(unittest.TestCase):
     def test_multiple_roots(self):
         self.assertEqual(html("<div /><span />"), [("div", {}, []), ("span", {}, [])])
 
-    def test_multiple_roots(self):
-        self.assertEqual(html("<div /><span />"), [("div", {}, []), ("span", {}, [])])
-
     def test_value_children(self):
         self.assertEqual(html("<div>foo</div>"), ("div", {}, ["foo"]))
         self.assertEqual(html("<div><span /></div>"), ("div", {}, [("span", {}, [])]))
@@ -27,10 +24,6 @@ class TestHTM(unittest.TestCase):
         self.assertEqual(
             html("<div>{html('<span/>')}</div>"), ("div", {}, [("span", {}, [])])
         )
-
-    def test_expression_tag(self):
-        tag = "div"
-        self.assertEqual(html("<{tag} />"), ("div", {}, []))
 
     def test_preserve_whitespace_between_text_values(self):
         self.assertEqual(html("<div>  a  {'b'}  c  </div>"), ("div", {}, ["  a  ", "b", "  c  "]))
@@ -48,23 +41,31 @@ class TestHTM(unittest.TestCase):
         tag = "div"
         self.assertEqual(html("<{tag} />"), ("div", {}, []))
 
-    def test_boolean_attribute(self):
+    def test_boolean_prop(self):
         self.assertEqual(html("<div foo />"), ("div", {"foo": True}, []))
         self.assertEqual(html("<div 'foo' />"), ("div", {"foo": True}, []))
         self.assertEqual(html('<div "foo" />'), ("div", {"foo": True}, []))
 
-    def test_value_attribute_name(self):
+    def test_value_prop_name(self):
         self.assertEqual(html("<div foo=1 />"), ("div", {"foo": "1"}, []))
         self.assertEqual(html('<div "foo"=1 />'), ("div", {"foo": "1"}, []))
         self.assertEqual(html("<div 'foo'=1 />"), ("div", {"foo": "1"}, []))
         self.assertEqual(html("<div foo='1' />"), ("div", {"foo": "1"}, []))
         self.assertEqual(html('<div foo="1" />'), ("div", {"foo": "1"}, []))
 
-    def test_expression_attribute(self):
+    def test_expression_prop_value(self):
         a = 1
         self.assertEqual(html("<div foo={a} />"), ("div", {"foo": 1}, []))
         self.assertEqual(html('<div "foo"={a} />'), ("div", {"foo": 1}, []))
         self.assertEqual(html("<div 'foo'={a} />"), ("div", {"foo": 1}, []))
+
+    def test_concatenated_prop_value(self):
+        a = 1
+        self.assertEqual(html("<div foo={a}{2} />"), ("div", {"foo": "12"}, []))
+        self.assertEqual(html("<div foo=0/{a}/{2} />"), ("div", {"foo": "0/1/2"}, []))
+
+    def test_slash_in_prop_value(self):
+        self.assertEqual(html("<div foo=/bar/quux />"), ("div", {"foo": "/bar/quux"}, []))
 
     def test_spread(self):
         foo = {"foo": 1}
@@ -93,12 +94,14 @@ class TestHTM(unittest.TestCase):
         )
 
     def test_tag_errors(self):
-        with self.assertRaisesRegex(ParseError, "empty tag"):
+        with self.assertRaisesRegex(ParseError, "no token found"):
             html("< >")
-        with self.assertRaisesRegex(ParseError, "empty tag"):
+        with self.assertRaisesRegex(ParseError, "no token found"):
             html("<>")
         with self.assertRaisesRegex(ParseError, "no token found"):
             html("<'")
+        with self.assertRaisesRegex(ParseError, "unexpected end of data"):
+            html("<")
 
     def test_attribute_name_errors(self):
         with self.assertRaisesRegex(ParseError, "expression not allowed"):
@@ -117,8 +120,10 @@ class TestHTM(unittest.TestCase):
             html("<div a")
         with self.assertRaisesRegex(ParseError, "unexpected end of data"):
             html("<div a=")
-        with self.assertRaisesRegex(ParseError, "no token found"):
-            html("<div a=>")
+
+    def test_structural_errors(self):
+        with self.assertRaisesRegex(ParseError, "all opened tags not closed"):
+            html("<div>")
 
 
 if __name__ == "__main__":
