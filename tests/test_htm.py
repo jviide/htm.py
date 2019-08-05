@@ -73,6 +73,25 @@ class TestHTM(unittest.TestCase):
             ("div", {"foo": 1, "bar": 2}, []),
         )
 
+    def test_comments(self):
+        self.assertEqual(
+            html("""
+                <div>
+                    before
+                    <!--
+                        multiple lines, {"variables"} and "quotes
+                        get ignored
+                    -->
+                    after
+                </div>
+            """),
+            ("div", {}, ["before", "after"])
+        )
+        self.assertEqual(
+            html("<div><!-->slight deviation from HTML comments<--></div>"),
+            ("div", {}, [])
+        )
+
     def test_tag_errors(self):
         with self.assertRaisesRegex(ParseError, "empty tag"):
             html("< >")

@@ -34,12 +34,20 @@ def skip_ws(string, start):
 
 def htm_parse(strings):
     ops = []
+    in_comment = False
     in_tag = False
     slash = False
 
     for index, string in enumerate(strings):
         start = 0
         while start < len(string):
+            if in_comment:
+                found = string.find("-->", start)
+                if found == -1:
+                    break
+                start = found + 3
+                in_comment = False
+
             if not in_tag:
                 found = string.find("<", start)
                 if found == -1:
@@ -51,6 +59,11 @@ def htm_parse(strings):
                 text = collapse_ws(string[start:found])
                 if text:
                     ops.append(("CHILD", False, text))
+
+                if string[found:found + 4] == "<!--":
+                    start = found + 4
+                    in_comment = True
+                    continue
                 start = found + 1
                 in_tag = True
 
@@ -114,7 +127,7 @@ def htm_parse(strings):
                 else:
                     raise ParseError("expression not allowed here")
 
-        if not in_tag and index < len(strings) - 1:
+        if not in_comment and not in_tag and index < len(strings) - 1:
             ops.append(("CHILD", True, index))
 
     count = 0
