@@ -14,6 +14,9 @@ class TestHTM(unittest.TestCase):
     def test_multiple_roots(self):
         self.assertEqual(html("<div /><span />"), [("div", {}, []), ("span", {}, [])])
 
+    def test_multiple_roots(self):
+        self.assertEqual(html("<div /><span />"), [("div", {}, []), ("span", {}, [])])
+
     def test_value_children(self):
         self.assertEqual(html("<div>foo</div>"), ("div", {}, ["foo"]))
         self.assertEqual(html("<div><span /></div>"), ("div", {}, [("span", {}, [])]))
@@ -28,6 +31,13 @@ class TestHTM(unittest.TestCase):
     def test_expression_tag(self):
         tag = "div"
         self.assertEqual(html("<{tag} />"), ("div", {}, []))
+
+    def test_preserve_whitespace_between_text_values(self):
+        self.assertEqual(html("<div>  a  {'b'}  c  </div>"), ("div", {}, ["  a  ", "b", "  c  "]))
+
+    def test_collapse_whitespace_lines_in_text(self):
+        self.assertEqual(html("<div>    \n    a    b    c    \n    </div>"), ("div", {}, ["a    b    c"]))
+        self.assertEqual(html("<div>a   \n   {'b'}    \n    c    \n    </div>"), ("div", {}, ["a", "b", "c"]))
 
     def test_value_tag(self):
         self.assertEqual(html("<div />"), ("div", {}, []))

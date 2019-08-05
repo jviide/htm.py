@@ -3,6 +3,13 @@ import functools
 from tagged import tag, ParseError
 
 
+RE_COLLAPSE = re.compile(r"^[^\S\n]*\n\s*|[^\S\n]*\n\s*$")
+
+
+def collapse_ws(string):
+    return RE_COLLAPSE.sub("", string)
+
+
 RE_VALUE = re.compile(r"\"[^\"]*\"|'[^']*'|[^\"'>/\s]+")
 
 RE_ATTR = re.compile(r"\"[^\"]*\"|'[^']*'|[^\"'>/=\s]+")
@@ -36,12 +43,12 @@ def htm_parse(strings):
             if not in_tag:
                 found = string.find("<", start)
                 if found == -1:
-                    text = string[start:].strip()
+                    text = collapse_ws(string[start:])
                     if text:
                         ops.append(("CHILD", False, text))
                     break
 
-                text = string[start:found].strip()
+                text = collapse_ws(string[start:found])
                 if text:
                     ops.append(("CHILD", False, text))
                 start = found + 1
