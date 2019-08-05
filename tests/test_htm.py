@@ -2,7 +2,7 @@ import unittest
 from htm import htm, ParseError
 
 
-@htm()
+@htm
 def html(tag, props, children):
     return tag, props, children
 

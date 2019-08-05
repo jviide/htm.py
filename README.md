@@ -15,7 +15,7 @@ $ pip3 install htm
 ```py
 from htm import htm
 
-@htm()
+@htm
 def html(tag, props, children):
     return tag, props, children
 

@@ -161,7 +161,7 @@ def htm_eval(h, ops, values, index=0):
     return root
 
 
-def htm(*, cache_maxsize=128):
+def htm(func=None, *, cache_maxsize=128):
     cached_parse = functools.lru_cache(maxsize=cache_maxsize)(htm_parse)
 
     def _htm(h):
@@ -172,4 +172,6 @@ def htm(*, cache_maxsize=128):
             return htm_eval(h, ops, values)
         return __htm
 
+    if func is not None:
+        return _htm(func)
     return _htm
