@@ -182,7 +182,6 @@ Along the way, we can more easily handle cases with children, so as when they sh
 We'll do both with a smarter ``html`` tag function:
 
 .. literalinclude:: example_09.py
-    :start-after: start
 
 .. invisible-code-block: python
 
