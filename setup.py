@@ -6,6 +6,7 @@ with open("README.md", "r") as readme:
 docs_require = [
     'Sphinx',
     'sphinx_rtd_theme',
+    'sybil',
 ]
 
 setuptools.setup(

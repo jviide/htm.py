@@ -10,6 +10,7 @@ Contents
     :maxdepth: 1
 
     why
+    usage
 
 Indices and tables
 ==================
