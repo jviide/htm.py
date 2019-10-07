@@ -1,11 +1,11 @@
-=====
-Usage
-=====
+===========
+Basic Usage
+===========
 
-``htm.py`` advertises itself as a Python implementation of `htm <https://github.com/developit/htm>`_.
+``htm.py`` advertises itself as a Python implementation of `htm <https://github.com/developit/htm>`_, a JavaScript templating package.
 ``htm`` advertises itself as a replacement for JSX, a simpler way to do VDOM-compatible templating.
 
-Let's take a look at some of the tempalting patterns in ``htm.py``.
+Let's take a look at some of the templating patterns in ``htm.py``.
 
 Hello World
 ===========
@@ -171,23 +171,3 @@ The results are the same:
 
 >>> result08
 ('ul', {'title': 'Say Howdy'}, [[('li', {}, ['Hello ', 'World']), ('li', {}, ['Hello ', 'Universe']), ('li', {}, ['Hello ', 'Galaxy'])]])
-
-Callable Components
-====================
-
-*Note: This part requires installation of the ``hyperpython`` package.*
-
-We can go a step further and have something that looks a bit more like components.
-Along the way, we can more easily handle cases with children, so as when they should be called.
-We'll do both with a smarter ``html`` tag function:
-
-.. literalinclude:: example_09.py
-
-.. invisible-code-block: python
-
-  from example_09 import result09
-
-The results are the same:
-
->>> str(result09)
-'<div><h1>Hello Python</h1><p>Now you can write HTML in Python!</p><h2>Hyperpython components!</h2><h2>Functional components!</h2><ul><li>foo</li><li>bar</li></ul></div>'

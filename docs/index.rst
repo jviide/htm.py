@@ -10,7 +10,8 @@ Contents
     :maxdepth: 1
 
     why
-    usage
+    basic_usage/index
+    rendering_components/index
 
 Indices and tables
 ==================
