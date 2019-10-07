@@ -32,7 +32,7 @@ load_tests = Sybil(
         DocTestParser(),
         CodeBlockParser(future_imports=['print_function']),
     ],
-    path='../docs/basic_usage',
+    path='../docs/rendering_components',
     pattern='*.rst',
     setup=sybil_setup, teardown=sybil_teardown
 ).unittest()
