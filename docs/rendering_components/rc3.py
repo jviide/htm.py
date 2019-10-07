@@ -3,7 +3,7 @@ from h import html, render
 name = 'World'
 
 page = html("""
-  <div>Hello {name}</div>
+  <div editable>Hello {name}</div>
   """)
 
-rc2 = render(page)
+rc3 = render(page)
