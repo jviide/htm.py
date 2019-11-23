@@ -79,9 +79,8 @@ So now you see the structure of the tuple:
 Dynamic Attributes
 ===================
 
-Wonder what the second item -- the empty ``{}`` -- is for in the tuple?
-That's where attributes for that node would go.
-Let's add an attribute:
+Attributes aren't always static, of course.
+You can make them dynamic by -- you guessed it -- curly brackets containing an expression:
 
 .. literalinclude:: example_04.py
     :start-after: start
