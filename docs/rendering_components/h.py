@@ -74,4 +74,3 @@ def encode_prop(k, v):
     if v is True:
         return escape(k)
     return f'{escape(k)}="{escape(v)}"'
-
