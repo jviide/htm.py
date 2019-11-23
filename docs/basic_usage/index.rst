@@ -155,6 +155,8 @@ The children of ``ul`` -- meaning, the third element of the tuple -- holds a seq
 >>> result07
 ('ul', {'title': 'Say Howdy'}, [[('li', {}, ['Hello ', 'World']), ('li', {}, ['Hello ', 'Universe']), ('li', {}, ['Hello ', 'Galaxy'])]])
 
+.. _bu-subcomponents:
+
 Subcomponents
 =============
 

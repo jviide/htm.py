@@ -8,15 +8,14 @@ from sybil import Sybil
 from sybil.parsers.codeblock import CodeBlockParser
 from sybil.parsers.doctest import DocTestParser
 
+TARGET = 'hyperpython'
+
 
 def sybil_setup(namespace):
     import htm
-    basic_usage = Path(htm.__file__).parents[1] / 'docs' / 'basic_usage'
-    sys.path.append(str(basic_usage))
 
-    rendering_components = Path(htm.__file__).parents[1] / 'docs' / 'rendering_components'
-    sys.path.append(str(rendering_components))
-    # there are better ways to do temp directories, but it's a simple example:
+    t = Path(htm.__file__).parents[1] / 'docs' / TARGET
+    sys.path.append(str(t))
     namespace['path'] = path = mkdtemp()
     namespace['cwd'] = getcwd()
     chdir(path)
@@ -32,7 +31,7 @@ load_tests = Sybil(
         DocTestParser(),
         CodeBlockParser(future_imports=['print_function']),
     ],
-    path='../docs/rendering_components',
+    path=f'../docs/{TARGET}',
     pattern='*.rst',
     setup=sybil_setup, teardown=sybil_teardown
 ).unittest()

@@ -85,6 +85,7 @@ Contents
     :maxdepth: 1
 
     basic_usage/index
+    hyperpython/index
     rendering_components/index
 
 Indices and tables
