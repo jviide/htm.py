@@ -17,7 +17,3 @@ result08b = html("""
     {html('''<p>{message}</p>''') if show_message else html('''<p>{not_message}</p>''')}
   </div>
 """)
-
-if __name__ == '__main__':
-
-    print(result08b)
