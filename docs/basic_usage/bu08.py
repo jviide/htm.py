@@ -8,15 +8,12 @@ def html(tag, props, children):
 
 # start
 message = 'Say Howdy'
-names = ['World', 'Universe', 'Galaxy']
-
-
-def greeting(name):
-    return html('<li>Hello {name}</li>')
-
+not_message = 'So Sad'
+show_message = True
 
 result08 = html("""
-  <ul title="{message}">
-    {[greeting(name) for name in names]}
-  </li>
+  <div>
+    <h1>Show?</h1>
+  </div>
 """)
+print(result08)

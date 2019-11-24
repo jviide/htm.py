@@ -157,20 +157,36 @@ The children of ``ul`` -- meaning, the third element of the tuple -- holds a seq
 
 .. _bu-subcomponents:
 
+Conditional Rendering
+=====================
+
+Maybe you only want a footer when a value is provided:
+
+.. literalinclude:: bu08.py
+
+.. invisible-code-block: python
+
+  from bu08 import result08
+
+Our output now contains the children of the caller, placed in the spot determined by the subcomponent:
+
+>>> result08
+('div', {}, [('h1', {}, ['Show?'])])
+
 Subcomponents
 =============
 
 In React and JSX, you frequently split things into lots -- LOTS -- of small, single-focused components.
 Let's extract the ``<li>`` into a subcomponent:
 
-.. literalinclude:: bu08.py
+.. literalinclude:: bu09.py
     :start-after: start
 
 .. invisible-code-block: python
 
-  from bu08 import result08
+  from bu09 import result09
 
 The results are the same:
 
->>> result08
+>>> result09
 ('ul', {'title': 'Say Howdy'}, [[('li', {}, ['Hello ', 'World']), ('li', {}, ['Hello ', 'Universe']), ('li', {}, ['Hello ', 'Galaxy'])]])
