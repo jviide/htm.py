@@ -125,7 +125,17 @@ As an additional feature, our ``Heading`` callable doesn't have to ask for ``chi
 >>> result05
 '<header>Hello My Components</header>'
 
-Lots more features could go in here, such as type coercion.
+You can also pass other Python values as props by using curly brackets:
+
+.. literalinclude:: hp05b.py
+    :start-after: start
+
+.. invisible-code-block: python
+
+  from hp05b import result05b
+
+>>> result05b
+'<header>Count++ 9</header>'
 
 Component Children
 ==================
