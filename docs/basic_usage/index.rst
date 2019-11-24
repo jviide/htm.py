@@ -171,7 +171,20 @@ Maybe you only want a footer when a value is provided:
 Our output now contains the children of the caller, placed in the spot determined by the subcomponent:
 
 >>> result08
-('div', {}, [('h1', {}, ['Show?'])])
+[('h1', {}, ['Show?']), 'Say Howdy']
+
+Here's another variation that inserts a subtemplate conditionally:
+
+.. literalinclude:: bu08b.py
+
+.. invisible-code-block: python
+
+  from bu08b import result08b
+
+We now get some richer output:
+
+>>> result08b
+('div', {}, [('h1', {}, ['Show?']), ('p', {}, ['Say Howdy'])])
 
 Subcomponents
 =============

@@ -11,7 +11,13 @@ message = 'Say Howdy'
 not_message = 'So Sad'
 show_message = True
 
-result08 = html("""
+result08b = html("""
+  <div>
     <h1>Show?</h1>
-    {message if show_message else not_message}
+    {html('''<p>{message}</p>''') if show_message else html('''<p>{not_message}</p>''')}
+  </div>
 """)
+
+if __name__ == '__main__':
+
+    print(result08b)
