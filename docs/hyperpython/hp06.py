@@ -41,8 +41,9 @@ def Heading(children, header='Some Default'):
 
 
 result06 = str(html("""
+    <div>
     <{Heading} header='My Components' unused=9>
         <div>Some children</div>
     <//>    
+    </div>
 """))
-print(result06)

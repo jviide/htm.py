@@ -142,4 +142,4 @@ Our `tag_factory` supports it, so let's show it:
 
 
 >>> result06
-'x'
+'<div><header>Hello My Components</header><div>Some children</div></div>'
