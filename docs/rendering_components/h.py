@@ -9,7 +9,7 @@ H = namedtuple("H", ["tag", "props", "children"])
 
 @htm
 def html(tag, props, children):
-    children = tuple(flatten(children))
+    # children = tuple(flatten(children))
     if callable(tag):
         return relaxed_call(tag, children=children, **props)
     return H(tag, props, children)

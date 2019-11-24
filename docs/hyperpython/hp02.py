@@ -1,5 +1,6 @@
-from htm import htm
 from hyperpython import h
+
+from htm import htm
 
 
 @htm
