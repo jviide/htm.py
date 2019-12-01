@@ -1,9 +1,11 @@
+from hyperpython import h
+
 from htm import htm
 
 
 @htm
 def html(tag, props, children):
-    return tag, props, children
+    return h(tag, props, children)
 
 
 # start
@@ -15,8 +17,8 @@ def greeting(name):
     return html('<li>Hello {name}</li>')
 
 
-result08 = html("""
+result02 = str(html("""
   <ul title="{message}">
     {[greeting(name) for name in names]}
   </li>
-""")
+"""))
