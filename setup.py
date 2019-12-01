@@ -3,6 +3,12 @@ import setuptools
 with open("README.md", "r") as readme:
     long_description = readme.read()
 
+docs_require = [
+    'Sphinx',
+    'sphinx_rtd_theme',
+    'sybil',
+]
+
 setuptools.setup(
     name="htm",
     version="0.1.0",
@@ -19,4 +25,5 @@ setuptools.setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
+    extras_require=dict(docs=docs_require)
 )

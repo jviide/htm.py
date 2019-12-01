@@ -40,6 +40,17 @@ html("""
 $ python3 -m unittest discover -s tests
 ```
 
+### Building Docs
+
+Documentation is available in the `docs` directory.
+First install the dependencies then build the docs:
+
+```shell script
+$ pip install -e .[docs]
+$ cd docs
+$ sphinx-build -b html . _build
+```
+
 ## License
 
 This library is licensed under the MIT license. See [./LICENSE](./LICENSE).
