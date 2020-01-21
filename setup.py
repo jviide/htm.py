@@ -7,6 +7,7 @@ docs_require = [
     'Sphinx',
     'sphinx_rtd_theme',
     'sybil',
+    'hyperpython',
 ]
 
 setuptools.setup(
