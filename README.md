@@ -34,6 +34,22 @@ html("""
 
 ## Development
 
+To install locally:
+
+```shell script
+$ pip install -e .
+```
+
+If you want to run tests and build the Sphinx docs and their examples...that runs into [a problem with hyperpython's transitive dependencies](https://github.com/ejplatform/hyperpython/issues/4).
+Thus: 
+
+```shell script
+$ pip install toolz
+$ pip install sidekick
+$ pip install -e .[docs]
+```
+
+
 ### Running Tests
 
 ```sh
