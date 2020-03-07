@@ -1,1 +1,2 @@
+-r sidekick_requirements.txt
 sidekick
