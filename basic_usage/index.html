@@ -1,0 +1,449 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Basic Usage &mdash; html.py</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Rendering With hyperpython" href="../hyperpython/index.html" />
+    <link rel="prev" title="html.py" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> htm.py
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Basic Usage</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#hello-world">Hello World</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#dynamic-values">Dynamic Values</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#static-attributes">Static Attributes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#dynamic-attributes">Dynamic Attributes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#nested-children">Nested Children</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#inline-python">Inline Python</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#looping">Looping</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#conditional-rendering">Conditional Rendering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#subcomponents">Subcomponents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../hyperpython/index.html">Rendering With <code class="docutils literal notranslate"><span class="pre">hyperpython</span></code></a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">htm.py</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Basic Usage</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/basic_usage/index.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="basic-usage">
+<h1>Basic Usage<a class="headerlink" href="#basic-usage" title="Permalink to this headline">¶</a></h1>
+<p><code class="docutils literal notranslate"><span class="pre">htm.py</span></code> advertises itself as a Python implementation of <a class="reference external" href="https://github.com/developit/htm">htm</a>, a JavaScript templating package.
+<code class="docutils literal notranslate"><span class="pre">htm</span></code> advertises itself as a replacement for JSX, a simpler way to do VDOM-compatible templating.</p>
+<p>Let’s take a look at some of the templating patterns in <code class="docutils literal notranslate"><span class="pre">htm.py</span></code>.</p>
+<div class="section" id="hello-world">
+<span id="bu-hello-world"></span><h2>Hello World<a class="headerlink" href="#hello-world" title="Permalink to this headline">¶</a></h2>
+<p>Let’s start with generating <code class="docutils literal notranslate"><span class="pre">&lt;div&gt;Hello</span> <span class="pre">World&lt;/div&gt;</span></code>.
+This is a single node (the <code class="docutils literal notranslate"><span class="pre">&lt;div&gt;</span></code>) with one child, a text node (<code class="docutils literal notranslate"><span class="pre">Hello</span> <span class="pre">World</span></code>.)</p>
+<p>Here is a “template”, the <code class="docutils literal notranslate"><span class="pre">html</span></code> function, which generates the VDOM-like output:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">htm</span> <span class="kn">import</span> <span class="n">htm</span>
+
+
+<span class="nd">@htm</span>
+<span class="k">def</span> <span class="nf">html</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">props</span><span class="p">,</span> <span class="n">children</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">tag</span><span class="p">,</span> <span class="n">props</span><span class="p">,</span> <span class="n">children</span>
+
+
+<span class="n">result01</span> <span class="o">=</span> <span class="n">html</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">  &lt;div&gt;Hello World&lt;/div&gt;</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>What is this VDOM-like output?
+A series of possibly-nested tuples, as explained in TODO.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">result01</span>
+<span class="go">(&#39;div&#39;, {}, [&#39;Hello World&#39;])</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="dynamic-values">
+<h2>Dynamic Values<a class="headerlink" href="#dynamic-values" title="Permalink to this headline">¶</a></h2>
+<p>That was pretty boring…all static, no “templating”.
+Let’s have the template insert a value:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;World&#39;</span>
+
+<span class="n">result02</span> <span class="o">=</span> <span class="n">html</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">  &lt;div&gt;Hello </span><span class="si">{name}</span><span class="s2">&lt;/div&gt;</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>As you can see, we use brackets, as in <code class="docutils literal notranslate"><span class="pre">{name}</span></code>, to insert values.
+The output is just a little be different now:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">result02</span>
+<span class="go">(&#39;div&#39;, {}, [&#39;Hello &#39;, &#39;World&#39;])</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="static-attributes">
+<h2>Static Attributes<a class="headerlink" href="#static-attributes" title="Permalink to this headline">¶</a></h2>
+<p>Wonder what the second item – the empty <code class="docutils literal notranslate"><span class="pre">{}</span></code> – is for in the tuple?
+That’s where attributes for that node would go.
+Let’s add an attribute:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;World&#39;</span>
+
+<span class="n">result03</span> <span class="o">=</span> <span class="n">html</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">  &lt;div title=&quot;Say Hi&quot;&gt;Hello </span><span class="si">{name}</span><span class="s2">&lt;/div&gt;</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This returns:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">result03</span>
+<span class="go">(&#39;div&#39;, {&#39;title&#39;: &#39;Say Hi&#39;}, [&#39;Hello &#39;, &#39;World&#39;])</span>
+</pre></div>
+</div>
+<p>So now you see the structure of the tuple:</p>
+<ul class="simple">
+<li><p>First item is the tag name</p></li>
+<li><p>Second item is for attribute information</p></li>
+<li><p>Third item is for child nodes</p></li>
+</ul>
+</div>
+<div class="section" id="dynamic-attributes">
+<h2>Dynamic Attributes<a class="headerlink" href="#dynamic-attributes" title="Permalink to this headline">¶</a></h2>
+<p>Attributes aren’t always static, of course.
+You can make them dynamic by – you guessed it – curly brackets containing an expression:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;Say Howdy&#39;</span>
+<span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;World&#39;</span>
+
+<span class="n">result04</span> <span class="o">=</span> <span class="n">html</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">  &lt;div title=&quot;</span><span class="si">{message}</span><span class="s2">&quot;&gt;Hello </span><span class="si">{name}</span><span class="s2">&lt;/div&gt;</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>And the result:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">result04</span>
+<span class="go">(&#39;div&#39;, {&#39;title&#39;: &#39;Say Howdy&#39;}, [&#39;Hello &#39;, &#39;World&#39;])</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="nested-children">
+<h2>Nested Children<a class="headerlink" href="#nested-children" title="Permalink to this headline">¶</a></h2>
+<p>We’re dealing with a single node.
+But what happens when we have a tree of nodes, which is usually the case?
+That’s where nesting comes in, and that’s where the VDOM approach shines.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;Say Howdy&#39;</span>
+<span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;World&#39;</span>
+
+<span class="n">result05</span> <span class="o">=</span> <span class="n">html</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">  &lt;section&gt;</span>
+<span class="s2">    &lt;div title=&quot;</span><span class="si">{message}</span><span class="s2">&quot;&gt;Hello </span><span class="si">{name}</span><span class="s2">&lt;/div&gt;</span>
+<span class="s2">  &lt;/section&gt;</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The result now has a tuple whose third item – the children – is a sequence:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">result05</span>
+<span class="go">(&#39;section&#39;, {}, [(&#39;div&#39;, {&#39;title&#39;: &#39;Say Howdy&#39;}, [&#39;Hello &#39;, &#39;World&#39;])])</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="inline-python">
+<h2>Inline Python<a class="headerlink" href="#inline-python" title="Permalink to this headline">¶</a></h2>
+<p>Perhaps we want the <code class="docutils literal notranslate"><span class="pre">name</span></code> value in all uppercase?
+This “template” language supports Python expressions inside the brackets:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;Say Howdy&#39;</span>
+<span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;World&#39;</span>
+
+<span class="n">result06</span> <span class="o">=</span> <span class="n">html</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">  &lt;section&gt;</span>
+<span class="s2">    &lt;div title=&quot;</span><span class="si">{message}</span><span class="s2">&quot;&gt;Hello {name.upper()}&lt;/div&gt;</span>
+<span class="s2">  &lt;/section&gt;</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The output is the same, but with <code class="docutils literal notranslate"><span class="pre">World</span></code> in all caps:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">result06</span>
+<span class="go">(&#39;section&#39;, {}, [(&#39;div&#39;, {&#39;title&#39;: &#39;Say Howdy&#39;}, [&#39;Hello &#39;, &#39;WORLD&#39;])])</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="looping">
+<h2>Looping<a class="headerlink" href="#looping" title="Permalink to this headline">¶</a></h2>
+<p>Rendering a list of things is very common.
+JSX, Jinja2, and most other template-like environments make it easy to do so.
+In JSX, you use the language’s looping facilities.
+Same in <code class="docutils literal notranslate"><span class="pre">htm.py</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;Say Howdy&#39;</span>
+<span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;World&#39;</span><span class="p">,</span> <span class="s1">&#39;Universe&#39;</span><span class="p">,</span> <span class="s1">&#39;Galaxy&#39;</span><span class="p">]</span>
+
+<span class="n">result07</span> <span class="o">=</span> <span class="n">html</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">  &lt;ul title=&quot;</span><span class="si">{message}</span><span class="s2">&quot;&gt;</span>
+<span class="s2">    {[</span>
+<span class="s2">        html(&#39;&lt;li&gt;Hello </span><span class="si">{name}</span><span class="s2">&lt;/li&gt;&#39;)</span>
+<span class="s2">        for name in names</span>
+<span class="s2">     ] }</span>
+<span class="s2">  &lt;/li&gt;</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>What’s the output?
+The children of <code class="docutils literal notranslate"><span class="pre">ul</span></code> – meaning, the third element of the tuple – holds a sequence of sequences:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">result07</span>
+<span class="go">(&#39;ul&#39;, {&#39;title&#39;: &#39;Say Howdy&#39;}, [[(&#39;li&#39;, {}, [&#39;Hello &#39;, &#39;World&#39;]), (&#39;li&#39;, {}, [&#39;Hello &#39;, &#39;Universe&#39;]), (&#39;li&#39;, {}, [&#39;Hello &#39;, &#39;Galaxy&#39;])]])</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="conditional-rendering">
+<span id="bu-subcomponents"></span><h2>Conditional Rendering<a class="headerlink" href="#conditional-rendering" title="Permalink to this headline">¶</a></h2>
+<p>Maybe you only want a footer when a value is provided:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">htm</span> <span class="kn">import</span> <span class="n">htm</span>
+
+
+<span class="nd">@htm</span>
+<span class="k">def</span> <span class="nf">html</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">props</span><span class="p">,</span> <span class="n">children</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">tag</span><span class="p">,</span> <span class="n">props</span><span class="p">,</span> <span class="n">children</span>
+
+
+<span class="c1"># start</span>
+<span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;Say Howdy&#39;</span>
+<span class="n">not_message</span> <span class="o">=</span> <span class="s1">&#39;So Sad&#39;</span>
+<span class="n">show_message</span> <span class="o">=</span> <span class="kc">True</span>
+
+<span class="n">result08</span> <span class="o">=</span> <span class="n">html</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    &lt;h1&gt;Show?&lt;/h1&gt;</span>
+<span class="s2">    {message if show_message else not_message}</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Our output now contains the children of the caller, placed in the spot determined by the subcomponent:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">result08</span>
+<span class="go">[(&#39;h1&#39;, {}, [&#39;Show?&#39;]), &#39;Say Howdy&#39;]</span>
+</pre></div>
+</div>
+<p>Here’s another variation that inserts a subtemplate conditionally:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">htm</span> <span class="kn">import</span> <span class="n">htm</span>
+
+
+<span class="nd">@htm</span>
+<span class="k">def</span> <span class="nf">html</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">props</span><span class="p">,</span> <span class="n">children</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">tag</span><span class="p">,</span> <span class="n">props</span><span class="p">,</span> <span class="n">children</span>
+
+
+<span class="c1"># start</span>
+<span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;Say Howdy&#39;</span>
+<span class="n">not_message</span> <span class="o">=</span> <span class="s1">&#39;So Sad&#39;</span>
+<span class="n">show_message</span> <span class="o">=</span> <span class="kc">True</span>
+
+<span class="n">result08b</span> <span class="o">=</span> <span class="n">html</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">  &lt;div&gt;</span>
+<span class="s2">    &lt;h1&gt;Show?&lt;/h1&gt;</span>
+<span class="s2">    {html(&#39;&#39;&#39;&lt;p&gt;</span><span class="si">{message}</span><span class="s2">&lt;/p&gt;&#39;&#39;&#39;) if show_message else html(&#39;&#39;&#39;&lt;p&gt;</span><span class="si">{not_message}</span><span class="s2">&lt;/p&gt;&#39;&#39;&#39;)}</span>
+<span class="s2">  &lt;/div&gt;</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We now get some richer output:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">result08b</span>
+<span class="go">(&#39;div&#39;, {}, [(&#39;h1&#39;, {}, [&#39;Show?&#39;]), (&#39;p&#39;, {}, [&#39;Say Howdy&#39;])])</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="subcomponents">
+<h2>Subcomponents<a class="headerlink" href="#subcomponents" title="Permalink to this headline">¶</a></h2>
+<p>In React and JSX, you frequently split things into lots – LOTS – of small, single-focused components.
+Let’s extract the <code class="docutils literal notranslate"><span class="pre">&lt;li&gt;</span></code> into a subcomponent:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;Say Howdy&#39;</span>
+<span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;World&#39;</span><span class="p">,</span> <span class="s1">&#39;Universe&#39;</span><span class="p">,</span> <span class="s1">&#39;Galaxy&#39;</span><span class="p">]</span>
+
+
+<span class="k">def</span> <span class="nf">greeting</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">html</span><span class="p">(</span><span class="s1">&#39;&lt;li&gt;Hello </span><span class="si">{name}</span><span class="s1">&lt;/li&gt;&#39;</span><span class="p">)</span>
+
+
+<span class="n">result09</span> <span class="o">=</span> <span class="n">html</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">  &lt;ul title=&quot;</span><span class="si">{message}</span><span class="s2">&quot;&gt;</span>
+<span class="s2">    {[greeting(name) for name in names]}</span>
+<span class="s2">  &lt;/li&gt;</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The results are the same:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">result09</span>
+<span class="go">(&#39;ul&#39;, {&#39;title&#39;: &#39;Say Howdy&#39;}, [[(&#39;li&#39;, {}, [&#39;Hello &#39;, &#39;World&#39;]), (&#39;li&#39;, {}, [&#39;Hello &#39;, &#39;Universe&#39;]), (&#39;li&#39;, {}, [&#39;Hello &#39;, &#39;Galaxy&#39;])]])</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../hyperpython/index.html" class="btn btn-neutral float-right" title="Rendering With hyperpython" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../index.html" class="btn btn-neutral float-left" title="html.py" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

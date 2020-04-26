@@ -1,0 +1,490 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Rendering With hyperpython &mdash; html.py</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Basic Usage" href="../basic_usage/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> htm.py
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../basic_usage/index.html">Basic Usage</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Rendering With <code class="docutils literal notranslate"><span class="pre">hyperpython</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#hello-world">Hello World</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#rendered-subcomponent">Rendered Subcomponent</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#real-component">Real Component</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#component-props">Component “Props”</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#argument-sniffing">Argument Sniffing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#component-children">Component Children</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">htm.py</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Rendering With <code class="docutils literal notranslate"><span class="pre">hyperpython</span></code></li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/hyperpython/index.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="rendering-with-hyperpython">
+<h1>Rendering With <code class="docutils literal notranslate"><span class="pre">hyperpython</span></code><a class="headerlink" href="#rendering-with-hyperpython" title="Permalink to this headline">¶</a></h1>
+<p>As mentioned at the start, <code class="docutils literal notranslate"><span class="pre">htm.py</span></code> is only half the equation.
+It generates a tree of operations.
+For “server side rendering” (SSR), something needs to take that and generate an HTML string.</p>
+<p>The <a class="reference external" href="https://hyperpython.readthedocs.io/en/latest/index.html">hyperpython</a> package can do that.
+The output of <code class="docutils literal notranslate"><span class="pre">htm.py</span></code> – the VDOM tree – is the input to <code class="docutils literal notranslate"><span class="pre">hyperpython</span></code>.</p>
+<p>Let’s take a look.</p>
+<div class="section" id="hello-world">
+<h2>Hello World<a class="headerlink" href="#hello-world" title="Permalink to this headline">¶</a></h2>
+<p>In <a class="reference internal" href="../basic_usage/index.html#bu-hello-world"><span class="std std-ref">Hello World</span></a> we saw a snippet that generated the VDOM for a static “Hello World”.
+Let’s re-do it, but with rendering to a string:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">htm</span> <span class="kn">import</span> <span class="n">htm</span>
+<span class="hll"><span class="kn">from</span> <span class="nn">hyperpython</span> <span class="kn">import</span> <span class="n">h</span>
+</span>
+
+<span class="nd">@htm</span>
+<span class="k">def</span> <span class="nf">html</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">props</span><span class="p">,</span> <span class="n">children</span><span class="p">):</span>
+<span class="hll">    <span class="k">return</span> <span class="n">h</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">props</span><span class="p">,</span> <span class="n">children</span><span class="p">)</span>
+</span>
+
+<span class="hll"><span class="n">result01</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">html</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+</span><span class="s2">  &lt;div&gt;Hello World&lt;/div&gt;</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>What’s different? We import the <cite>h</cite> function from <code class="docutils literal notranslate"><span class="pre">hyperpython</span></code> and have our <code class="docutils literal notranslate"><span class="pre">html</span></code> function pass the <code class="docutils literal notranslate"><span class="pre">htm</span></code> stuff into it.
+Then, we get the string representation at the end, which does the conversion into a string:</p>
+<p>As such, instead of a Python tuple of VDOM thingies, we get an HTML string:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">result01</span>
+<span class="go">&#39;&lt;div&gt;Hello World&lt;/div&gt;&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="rendered-subcomponent">
+<h2>Rendered Subcomponent<a class="headerlink" href="#rendered-subcomponent" title="Permalink to this headline">¶</a></h2>
+<p>Let’s now recreate another example: <a class="reference internal" href="../basic_usage/index.html#bu-subcomponents"><span class="std std-ref">Conditional Rendering</span></a>.
+But this time, rendering a string.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;Say Howdy&#39;</span>
+<span class="hll"><span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;World&#39;</span><span class="p">,</span> <span class="s1">&#39;Universe&#39;</span><span class="p">,</span> <span class="s1">&#39;Galaxy&#39;</span><span class="p">]</span>
+</span>
+
+<span class="k">def</span> <span class="nf">greeting</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">html</span><span class="p">(</span><span class="s1">&#39;&lt;li&gt;Hello </span><span class="si">{name}</span><span class="s1">&lt;/li&gt;&#39;</span><span class="p">)</span>
+<span class="hll">
+</span>
+<span class="n">result02</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">html</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="hll"><span class="s2">  &lt;ul title=&quot;</span><span class="si">{message}</span><span class="s2">&quot;&gt;</span>
+</span><span class="s2">    {[greeting(name) for name in names]}</span>
+<span class="s2">  &lt;/li&gt;</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>What’s different? We import the <cite>h</cite> function from <code class="docutils literal notranslate"><span class="pre">hyperpython</span></code> and have our <code class="docutils literal notranslate"><span class="pre">html</span></code> function pass the <code class="docutils literal notranslate"><span class="pre">htm</span></code> stuff into it.
+Then, we get the string representation at the end, which does the conversion into a string.</p>
+<p>As such, instead of a Python tuple of VDOM thingies, we get an HTML string:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">result02</span>
+<span class="go">&#39;&lt;ul title=&quot;Say Howdy&quot;&gt;&lt;li&gt;Hello World&lt;/li&gt;&lt;li&gt;Hello Universe&lt;/li&gt;&lt;li&gt;Hello Galaxy&lt;/li&gt;&lt;/ul&gt;&#39;</span>
+</pre></div>
+</div>
+<p>Let’s use that as our foray into some more features.</p>
+</div>
+<div class="section" id="real-component">
+<h2>Real Component<a class="headerlink" href="#real-component" title="Permalink to this headline">¶</a></h2>
+<p>That’s not a real component, it’s just a Python function call in the middle of an expression.
+<code class="docutils literal notranslate"><span class="pre">htm</span></code> and thus <code class="docutils literal notranslate"><span class="pre">htm.py</span></code> support a first-class concept of a component, in the grammar, which gets compiled.</p>
+<p>Components have a curly brace around them. Let’s do a simple Greeting, but first, without passing an argument:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>
+<span class="nd">@htm</span>
+<span class="k">def</span> <span class="nf">html</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">props</span><span class="p">,</span> <span class="n">children</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">callable</span><span class="p">(</span><span class="n">tag</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">tag</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">h</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">props</span><span class="p">,</span> <span class="n">children</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">Heading</span><span class="p">():</span>
+    <span class="k">return</span> <span class="n">html</span><span class="p">(</span><span class="s1">&#39;&lt;header&gt;Hello World&lt;/header&gt;&#39;</span><span class="p">)</span>
+
+
+<span class="n">result03</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">html</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    &lt;</span><span class="si">{Heading}</span><span class="s2">&gt;&lt;//&gt;</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>React popularized having lots of small, reusable, functional components.
+Here’s how the <code class="docutils literal notranslate"><span class="pre">Heading</span></code> renders:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">result03</span>
+<span class="go">&#39;&lt;header&gt;Hello World&lt;/header&gt;&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="component-props">
+<h2>Component “Props”<a class="headerlink" href="#component-props" title="Permalink to this headline">¶</a></h2>
+<p>JSX uses “props”, which are a series of HTML attribute-looking things.
+Our <code class="docutils literal notranslate"><span class="pre">html</span></code> function is currently acting like a factory.
+Let’s make it smarter about gathering up props.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>
+<span class="nd">@htm</span>
+<span class="k">def</span> <span class="nf">html</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">props</span><span class="p">,</span> <span class="n">children</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">callable</span><span class="p">(</span><span class="n">tag</span><span class="p">):</span>
+        <span class="c1"># In this case:</span>
+        <span class="c1">#   props={&#39;header&#39;: &#39;My Components&#39;}</span>
+        <span class="k">return</span> <span class="n">tag_factory</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="n">children</span><span class="p">,</span> <span class="o">**</span><span class="n">props</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">h</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">props</span><span class="p">,</span> <span class="n">children</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">tag_factory</span><span class="p">(</span><span class="n">tag_callable</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">tag_callable</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">Heading</span><span class="p">(</span><span class="n">header</span><span class="o">=</span><span class="s1">&#39;Some Default&#39;</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="p">()):</span>
+    <span class="k">return</span> <span class="n">html</span><span class="p">(</span><span class="s1">&#39;&lt;header&gt;Hello </span><span class="si">{header}</span><span class="s1">&lt;/header&gt;&#39;</span><span class="p">)</span>
+
+
+<span class="n">result04</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">html</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    &lt;</span><span class="si">{Heading}</span><span class="s2"> header=&#39;My Components&#39;&gt;&lt;//&gt;</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Rather than call the “tag” immediately, we instead need to pass the props to a function which will:</p>
+<ul class="simple">
+<li><p>Pick them apart</p></li>
+<li><p>Pass them as arguments to the callable at <code class="docutils literal notranslate"><span class="pre">tag</span></code></p></li>
+<li><p>Return the result</p></li>
+</ul>
+<p>This is the kind of thing factories such as <code class="docutils literal notranslate"><span class="pre">html</span></code> are good for.
+Here’s the result we get:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">result04</span>
+<span class="go">&#39;&lt;header&gt;Hello My Components&lt;/header&gt;&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="argument-sniffing">
+<h2>Argument Sniffing<a class="headerlink" href="#argument-sniffing" title="Permalink to this headline">¶</a></h2>
+<p>Our factory does a good job of forwarding along arguments from the “props” to the callable.
+But what if the props provide something the callable doesn’t want?</p>
+<p>Let’s make the <code class="docutils literal notranslate"><span class="pre">tag_factory</span></code> a little smarter, by having it sniff at the function arguments.
+Then, get the requested args from the props before calling:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>
+<span class="nd">@htm</span>
+<span class="k">def</span> <span class="nf">html</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">props</span><span class="p">,</span> <span class="n">children</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">callable</span><span class="p">(</span><span class="n">tag</span><span class="p">):</span>
+        <span class="c1"># In this case:</span>
+        <span class="c1">#   props={&#39;header&#39;: &#39;My Components&#39;}</span>
+        <span class="k">return</span> <span class="n">tag_factory</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="n">children</span><span class="p">,</span> <span class="o">**</span><span class="n">props</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">h</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">props</span><span class="p">,</span> <span class="n">children</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">tag_factory</span><span class="p">(</span><span class="n">tag_callable</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="n">sig</span> <span class="o">=</span> <span class="n">signature</span><span class="p">(</span><span class="n">tag_callable</span><span class="p">)</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="n">sig</span><span class="o">.</span><span class="n">parameters</span>
+
+    <span class="c1"># Pick through the callable&#39;s signature and get</span>
+    <span class="c1"># what is needed</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">kind</span> <span class="o">==</span> <span class="n">p</span><span class="o">.</span><span class="n">VAR_KEYWORD</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">parameters</span><span class="o">.</span><span class="n">values</span><span class="p">()):</span>
+        <span class="n">extra_key</span> <span class="o">=</span> <span class="s2">&quot;_&quot;</span>
+        <span class="k">while</span> <span class="n">extra_key</span> <span class="ow">in</span> <span class="n">parameters</span><span class="p">:</span>
+            <span class="n">extra_key</span> <span class="o">+=</span> <span class="s2">&quot;_&quot;</span>
+
+        <span class="n">sig</span> <span class="o">=</span> <span class="n">sig</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
+            <span class="n">parameters</span><span class="o">=</span><span class="p">[</span><span class="o">*</span><span class="n">parameters</span><span class="o">.</span><span class="n">values</span><span class="p">(),</span>
+                        <span class="n">Parameter</span><span class="p">(</span><span class="n">extra_key</span><span class="p">,</span> <span class="n">Parameter</span><span class="o">.</span><span class="n">VAR_KEYWORD</span><span class="p">)</span>
+                        <span class="p">]</span>
+        <span class="p">)</span>
+        <span class="n">kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">sig</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span><span class="o">.</span><span class="n">arguments</span><span class="p">)</span>
+        <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">extra_key</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">tag_callable</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">Heading</span><span class="p">(</span><span class="n">header</span><span class="o">=</span><span class="s1">&#39;Some Default&#39;</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">html</span><span class="p">(</span><span class="s1">&#39;&lt;header&gt;Hello </span><span class="si">{header}</span><span class="s1">&lt;/header&gt;&#39;</span><span class="p">)</span>
+
+
+<span class="n">result05</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">html</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    &lt;</span><span class="si">{Heading}</span><span class="s2"> header=&#39;My Components&#39; unused=9&gt;&lt;//&gt;</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Note that our usage of <code class="docutils literal notranslate"><span class="pre">Heading</span></code> included a prop <code class="docutils literal notranslate"><span class="pre">unused</span></code> which is ignored, since we are sniffing the <code class="docutils literal notranslate"><span class="pre">Heading</span></code> callable’s arguments.
+As an additional feature, our <code class="docutils literal notranslate"><span class="pre">Heading</span></code> callable doesn’t have to ask for <code class="docutils literal notranslate"><span class="pre">children</span></code> when it isn’t using it.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">result05</span>
+<span class="go">&#39;&lt;header&gt;Hello My Components&lt;/header&gt;&#39;</span>
+</pre></div>
+</div>
+<p>You can also pass other Python values as props by using curly brackets:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>
+<span class="nd">@htm</span>
+<span class="k">def</span> <span class="nf">html</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">props</span><span class="p">,</span> <span class="n">children</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">callable</span><span class="p">(</span><span class="n">tag</span><span class="p">):</span>
+        <span class="c1"># In this case:</span>
+        <span class="c1">#   props={&#39;header&#39;: &#39;My Components&#39;}</span>
+        <span class="k">return</span> <span class="n">tag_factory</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="n">children</span><span class="p">,</span> <span class="o">**</span><span class="n">props</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">h</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">props</span><span class="p">,</span> <span class="n">children</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">tag_factory</span><span class="p">(</span><span class="n">tag_callable</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="n">sig</span> <span class="o">=</span> <span class="n">signature</span><span class="p">(</span><span class="n">tag_callable</span><span class="p">)</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="n">sig</span><span class="o">.</span><span class="n">parameters</span>
+
+    <span class="c1"># Pick through the callable&#39;s signature and get</span>
+    <span class="c1"># what is needed</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">kind</span> <span class="o">==</span> <span class="n">p</span><span class="o">.</span><span class="n">VAR_KEYWORD</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">parameters</span><span class="o">.</span><span class="n">values</span><span class="p">()):</span>
+        <span class="n">extra_key</span> <span class="o">=</span> <span class="s2">&quot;_&quot;</span>
+        <span class="k">while</span> <span class="n">extra_key</span> <span class="ow">in</span> <span class="n">parameters</span><span class="p">:</span>
+            <span class="n">extra_key</span> <span class="o">+=</span> <span class="s2">&quot;_&quot;</span>
+
+        <span class="n">sig</span> <span class="o">=</span> <span class="n">sig</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
+            <span class="n">parameters</span><span class="o">=</span><span class="p">[</span><span class="o">*</span><span class="n">parameters</span><span class="o">.</span><span class="n">values</span><span class="p">(),</span>
+                        <span class="n">Parameter</span><span class="p">(</span><span class="n">extra_key</span><span class="p">,</span> <span class="n">Parameter</span><span class="o">.</span><span class="n">VAR_KEYWORD</span><span class="p">)</span>
+                        <span class="p">]</span>
+        <span class="p">)</span>
+        <span class="n">kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">sig</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span><span class="o">.</span><span class="n">arguments</span><span class="p">)</span>
+        <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">extra_key</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">tag_callable</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">Heading</span><span class="p">(</span><span class="n">count</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">html</span><span class="p">(</span><span class="s1">&#39;&lt;header&gt;Count++ {count+1}&lt;/header&gt;&#39;</span><span class="p">)</span>
+
+
+<span class="n">result05b</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">html</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    &lt;</span><span class="si">{Heading}</span><span class="s2"> count=</span><span class="si">{8}</span><span class="s2">&gt;&lt;//&gt;</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">result05b</span>
+<span class="go">&#39;&lt;header&gt;Count++ 9&lt;/header&gt;&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="component-children">
+<h2>Component Children<a class="headerlink" href="#component-children" title="Permalink to this headline">¶</a></h2>
+<p>A component might expect to receive some children, which it will then place as it wishes.
+Our <cite>tag_factory</cite> supports it, so let’s show it:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>
+<span class="nd">@htm</span>
+<span class="k">def</span> <span class="nf">html</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">props</span><span class="p">,</span> <span class="n">children</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">callable</span><span class="p">(</span><span class="n">tag</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">tag_factory</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="n">children</span><span class="p">,</span> <span class="o">**</span><span class="n">props</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">h</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">props</span><span class="p">,</span> <span class="n">children</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">tag_factory</span><span class="p">(</span><span class="n">tag_callable</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="n">sig</span> <span class="o">=</span> <span class="n">signature</span><span class="p">(</span><span class="n">tag_callable</span><span class="p">)</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="n">sig</span><span class="o">.</span><span class="n">parameters</span>
+
+    <span class="c1"># Pick through the callable&#39;s signature and get</span>
+    <span class="c1"># what is needed</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">kind</span> <span class="o">==</span> <span class="n">p</span><span class="o">.</span><span class="n">VAR_KEYWORD</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">parameters</span><span class="o">.</span><span class="n">values</span><span class="p">()):</span>
+        <span class="n">extra_key</span> <span class="o">=</span> <span class="s2">&quot;_&quot;</span>
+        <span class="k">while</span> <span class="n">extra_key</span> <span class="ow">in</span> <span class="n">parameters</span><span class="p">:</span>
+            <span class="n">extra_key</span> <span class="o">+=</span> <span class="s2">&quot;_&quot;</span>
+
+        <span class="n">sig</span> <span class="o">=</span> <span class="n">sig</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
+            <span class="n">parameters</span><span class="o">=</span><span class="p">[</span><span class="o">*</span><span class="n">parameters</span><span class="o">.</span><span class="n">values</span><span class="p">(),</span>
+                        <span class="n">Parameter</span><span class="p">(</span><span class="n">extra_key</span><span class="p">,</span> <span class="n">Parameter</span><span class="o">.</span><span class="n">VAR_KEYWORD</span><span class="p">)</span>
+                        <span class="p">]</span>
+        <span class="p">)</span>
+        <span class="n">kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">sig</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span><span class="o">.</span><span class="n">arguments</span><span class="p">)</span>
+        <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">extra_key</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">tag_callable</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">Heading</span><span class="p">(</span><span class="n">children</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="s1">&#39;Some Default&#39;</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">html</span><span class="p">(</span><span class="s1">&#39;&lt;header&gt;Hello </span><span class="si">{header}</span><span class="s1">&lt;/header&gt;</span><span class="si">{children}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+
+<span class="n">result06</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">html</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    &lt;div&gt;</span>
+<span class="s2">    &lt;</span><span class="si">{Heading}</span><span class="s2"> header=&#39;My Components&#39; unused=9&gt;</span>
+<span class="s2">        &lt;div&gt;Some children&lt;/div&gt;</span>
+<span class="s2">    &lt;//&gt;    </span>
+<span class="s2">    &lt;/div&gt;</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">result06</span>
+<span class="go">&#39;&lt;div&gt;&lt;header&gt;Hello My Components&lt;/header&gt;&lt;div&gt;Some children&lt;/div&gt;&lt;/div&gt;&#39;</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="../basic_usage/index.html" class="btn btn-neutral float-left" title="Basic Usage" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
