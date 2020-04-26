@@ -1,4 +1,4 @@
-# htm.py [![CircleCI](https://circleci.com/gh/jviide/htm.py.svg?style=shield)](https://circleci.com/gh/jviide/htm.py) [![PyPI](https://img.shields.io/pypi/v/htm.svg?color=blue)](https://pypi.org/project/htm/)
+# htm.py ![Tests](https://github.com/jviide/htm.py/workflows/Tests/badge.svg) [![PyPI](https://img.shields.io/pypi/v/htm.svg?color=blue)](https://pypi.org/project/htm/)
 
 A Python version of [developit/htm](https://github.com/developit/htm) - JSX-like syntax in plain ~~JavaScript~~ Python.
 
