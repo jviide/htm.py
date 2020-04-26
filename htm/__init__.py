@@ -69,14 +69,6 @@ class Scanner:
             start = 0
         return None, ()
 
-    def match(self, regex):
-        if self._index < len(self._strings):
-            match = regex.match(self._strings[self._index], self._start)
-            if match:
-                self._start = match.end()
-                return match
-        return None
-
     def flush(self):
         flushed = []
         start = self._start
