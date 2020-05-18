@@ -4,6 +4,10 @@ A Python version of [developit/htm](https://github.com/developit/htm) - JSX-like
 
 ![](https://user-images.githubusercontent.com/19776768/59420458-99d60000-8dd5-11e9-9d29-02fff6c83a55.png)
 
+## Documentation
+
+The main documentation of this module is located at https://jviide.github.io/htm.py/.
+
 ## Installation
 
 ```sh
